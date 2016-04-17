@@ -1,0 +1,27 @@
+<rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:admin="http://webns.net/mvcb/">
+<foaf:PersonalProfileDocument rdf:about="">
+  <foaf:maker rdf:resource="#me"/>
+  <foaf:primaryTopic rdf:resource="#me"/>
+  <admin:generatorAgent rdf:resource="http://www.ldodds.com/foaf/foaf-a-matic"/>
+  <admin:errorReportsTo rdf:resource="mailto:leigh@ldodds.com"/>
+</foaf:PersonalProfileDocument>
+<foaf:Person rdf:ID="me">
+<foaf:name>Juan Santana</foaf:name>
+<foaf:givenname>Juan</foaf:givenname>
+<foaf:family_name>Santana</foaf:family_name>
+<foaf:mbox rdf:resource="mailto:juansantana@gmail.com"/>
+<foaf:knows>
+<foaf:Person>
+<foaf:name>Ana Perez</foaf:name>
+<foaf:mbox rdf:resource="mailto:anaperez@gmail.com"/>
+<rdfs:seeAlso rdf:resource="Ana.rdf"/></foaf:Person></foaf:knows>
+<foaf:knows>
+<foaf:Person>
+<foaf:name>Luisa Rodriguez</foaf:name>
+<foaf:mbox rdf:resource="mailto:luisarodriguez@gmail.com"/>
+<rdfs:seeAlso rdf:resource="Luisa.rdf"/></foaf:Person></foaf:knows></foaf:Person>
+</rdf:RDF>

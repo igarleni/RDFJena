@@ -27,10 +27,10 @@ public class RDFJena {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String filename = "C:/Users/Italo/Mis archivos/Universidad/2.-Sistemas Inteligentes II/3.-Web Semántica/Ejercicio/Juan.rdf";
+        String filename = "Juan.rdf";
         //fromFOAFtoTURTLEndNTRIPLES(filename);
         
-        printKnownPeople(filename);
+        printKnownPeople(filename, "Juan Santana");
     }
 
     private static void fromFOAFtoTURTLEndNTRIPLES(String filename) {        
@@ -50,9 +50,9 @@ public class RDFJena {
         
     }
 
-    private static void printKnownPeople(String filename) {
+    private static void printKnownPeople(String filename, String name) {
         LogCtl.setCmdLogging();
-        printKnownRecursive(filename);
+        printKnownRecursive(filename, name);
         //obtener objetos de tripletas con propiedad = knows
 
         //imprimir tripleta sujeto knows objeto
@@ -60,30 +60,50 @@ public class RDFJena {
         //acceder a objeto y volver a empezar
     }
     
-    private static void printKnownRecursive(String filename){
+    private static void printKnownRecursive(String filename, String name){
         Model modelo = ModelFactory.createDefaultModel();
         modelo.read(filename);
         
         StmtIterator iter = modelo.listStatements();
         while(iter.hasNext()){
-            System.out.println("----------------------------------");
-            System.out.println("--------------OBJETO--------------");
-            System.out.println("----------------------------------");
             Statement declaracion = iter.nextStatement();
-            
-            Resource sujeto = declaracion.getSubject();
-            Property propiedad = declaracion.getPredicate();
-            RDFNode objeto = declaracion.getObject();
-            
-            System.out.println(sujeto.toString());
-            System.out.println(propiedad.toString());
-            System.out.print("Objeto ->");
-            if (objeto.isResource()){
-                System.out.println(objeto.toString());
-            }
-            else{
-                System.out.println(objeto);
+            if (declaracion.getPredicate().toString().contains("knows")){
+                String personKnownName = findPersonName(modelo, declaracion.getObject());
+                if (personKnownName != null){
+                    System.out.println(name + " conoce a " + personKnownName);
+                    String personKnownFilename = findPersonFilename(modelo, declaracion.getObject());
+                    if (personKnownFilename != null){
+                        System.out.println(personKnownFilename);
+                        printKnownRecursive(personKnownFilename, personKnownName);
+                    }else
+                        System.out.println("Fallo al buscar direccion");
+                }
+                else
+                    System.out.println("Fallo al buscar el nombre");
             }
         }
+    }
+
+    private static String findPersonName(Model modelo, RDFNode referencia) {
+        StmtIterator iter = modelo.listStatements();
+        while(iter.hasNext()){
+            Statement declaracion = iter.nextStatement();
+            if ((declaracion.getSubject().toString().equals(referencia.toString())) && (declaracion.getPredicate().toString().contains("name"))){
+                return declaracion.getObject().toString();
+            }
+        }
+        return null;
+    }
+
+    private static String findPersonFilename(Model modelo, RDFNode referencia) {
+        StmtIterator iter = modelo.listStatements();
+        while(iter.hasNext()){
+            Statement declaracion = iter.nextStatement();
+            if ((declaracion.getSubject().toString().equals(referencia.toString())) && (declaracion.getPredicate().toString().contains("seeAlso"))){
+                String result = declaracion.getObject().toString();
+                return result.substring(result.lastIndexOf('/')+1);
+            }
+        }
+        return null;
     }
 }
